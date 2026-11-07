@@ -70,8 +70,24 @@
 }
 
 .icon-button {
-  background: transparent;
-  color: var(--muted);
+  width: 39px;
+  height: 39px;
+  min-width: 39px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: none;
+  color: white;
   border: none;
-  font-size: 20px;
+  cursor: pointer;
+}
+
+.user-avatar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }

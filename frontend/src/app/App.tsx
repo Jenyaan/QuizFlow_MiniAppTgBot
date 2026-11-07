@@ -1,9 +1,14 @@
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./styles/App.css";
 
 import { Header } from "../widgets/header/index.ts";
 import { StatistaCard } from "../widgets/statistaCard/ui/StatistaCard.tsx";
+import { ResultCard } from "../widgets/resultCard/ui/ResultCard.tsx";
+
+
+
+import type { Result } from "../entities/result/types.ts";
 
 type Quiz = {
   id: number;
@@ -14,18 +19,11 @@ type Quiz = {
   icon: string;
   questions: number;
   plays: number;
-  difficulty: string;
+  isPublic: boolean;
+  hasPassword: boolean;
   color: string;
 };
 
-type Result = {
-  title: string;
-  date: string;
-  score: number;
-  total: number;
-  percent: number;
-  icon: string;
-};
 
 const quizzes: Quiz[] = [
   {
@@ -37,7 +35,8 @@ const quizzes: Quiz[] = [
     icon: "💻",
     questions: 20,
     plays: 1240,
-    difficulty: "Средний",
+    isPublic: true,
+    hasPassword: false,
     color: "purple",
   },
   {
@@ -49,7 +48,8 @@ const quizzes: Quiz[] = [
     icon: "🌍",
     questions: 15,
     plays: 856,
-    difficulty: "Лёгкий",
+    isPublic: false,
+    hasPassword: true,
     color: "blue",
   },
   {
@@ -61,7 +61,8 @@ const quizzes: Quiz[] = [
     icon: "🧠",
     questions: 25,
     plays: 2100,
-    difficulty: "Сложный",
+    isPublic: true,
+    hasPassword: false,
     color: "orange",
   },
   {
@@ -73,16 +74,10 @@ const quizzes: Quiz[] = [
     icon: "🐍",
     questions: 18,
     plays: 642,
-    difficulty: "Средний",
+    isPublic: false,
+    hasPassword: false,
     color: "green",
   },
-];
-
-const categories = [
-  "Все",
-  "Программирование",
-  "Языки",
-  "Общие знания",
 ];
 
 const results: Result[] = [
@@ -116,59 +111,49 @@ type Page = "home" | "history" | "create";
 
 function App() {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("Все");
   const [page, setPage] = useState<Page>("home");
 
+  const telegram = window.Telegram?.WebApp;
+  const user = telegram?.initDataUnsafe?.user;
+
+  const firstName = user?.first_name ?? "Гость";
+  const username = user.username;
+  const userId = user.id;
+  const avatarUrl = user?.photo_url;
+
+
+  useEffect(() => {
+    telegram?.ready();
+    telegram?.expand();
+  }, []);
+
   const filteredQuizzes = useMemo(() => {
-    return quizzes.filter((quiz) => {
-      const query = search.toLowerCase().trim();
+    const query = search.toLowerCase().trim();
 
-      const matchesSearch =
+    if (!query) return [];
+
+    return quizzes.filter(
+      (quiz) =>
         quiz.title.toLowerCase().includes(query) ||
-        quiz.code.toLowerCase().includes(query);
-
-      const matchesCategory =
-        category === "Все" || quiz.category === category;
-
-      return matchesSearch && matchesCategory;
-    });
-  }, [search, category]);
+        quiz.code.toLowerCase().includes(query)
+    );
+  }, [search]);
 
   const openPage = (nextPage: Page) => {
     setPage(nextPage);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const ResultCard = ({ result }: { result: Result }) => (
-    <article className="result-card">
-      <div className="result-icon">{result.icon}</div>
-
-      <div className="result-info">
-        <h3>{result.title}</h3>
-        <span>{result.date}</span>
-      </div>
-
-      <div className="result-progress">
-        <div className="progress-track">
-          <div
-            className="progress-fill"
-            style={{ width: `${result.percent}%` }}
-          />
-        </div>
-        <span>{result.percent}%</span>
-      </div>
-
-      <div className="result-score">
-        <strong>{result.score}/{result.total}</strong>
-        <span>баллов</span>
-      </div>
-    </article>
-  );
 
   return (
     <div className="app">
+      <Header
+        firstName={firstName}
+        username={username}
+        userId={userId}
+        avatarUrl={avatarUrl}
+      />
 
-      <Header />
       <main className="main-content">
         {page === "home" && (
           <>
@@ -179,12 +164,12 @@ function App() {
                 </span>
 
                 <h1>
-                  Привет, Alex! <span>👋</span>
+                  Привет, {firstName}! <span>👋</span>
                 </h1>
 
                 <p>
-                  Новые знания начинаются с одного вопроса.
-                  Какой тест пройдёшь сегодня?
+                  Создавай собственные тесты и делись ими
+                  с друзьями. Проверяй знания и учись новому!
                 </p>
               </div>
 
@@ -196,24 +181,16 @@ function App() {
             </section>
 
             <section className="search-section">
-              <div className="search-box">
-                <span className="search-icon">⌕</span>
-                <input
-                  type="search"
-                  placeholder="Найти тест по названию или коду..."
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                />
-              </div>
-            </section>
+              <div className="search-toolbar">
+                <div className="search-box">
+                  <span className="search-icon">⌕</span>
 
-           <StatistaCard />
-
-            <section className="section">
-              <div className="section-heading">
-                <div>
-                  <span className="eyebrow">ИССЛЕДУЙ И УЧИСЬ</span>
-                  <h2>Найди свой тест</h2>
+                  <input
+                    type="search"
+                    placeholder="Найти тест по названию или коду..."
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                  />
                 </div>
 
                 <button
@@ -223,68 +200,100 @@ function App() {
                   <span>＋</span> Создать тест
                 </button>
               </div>
-
-              <div className="categories">
-                {categories.map((item) => (
-                  <button
-                    key={item}
-                    className={`category-chip ${
-                      category === item ? "active" : ""
-                    }`}
-                    onClick={() => setCategory(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-
-              <div className="quiz-grid">
-                {filteredQuizzes.map((quiz) => (
-                  <article className="quiz-card" key={quiz.id}>
-                    <div className="quiz-card-top">
-                      <div className={`quiz-icon ${quiz.color}`}>
-                        {quiz.icon}
-                      </div>
-                      <span className="difficulty">
-                        {quiz.difficulty}
-                      </span>
-                    </div>
-
-                    <span className="quiz-category">
-                      {quiz.category}
-                    </span>
-
-                    <h3>{quiz.title}</h3>
-                    <p>{quiz.description}</p>
-
-                    <div className="quiz-meta">
-                      <span>☷ {quiz.questions} вопросов</span>
-                      <span>◉ {quiz.plays.toLocaleString("ru-RU")}</span>
-                    </div>
-
-                    <div className="quiz-card-footer">
-                      <span className="quiz-code">
-                        Код: {quiz.code}
-                      </span>
-                      <button className="start-button">
-                        Пройти <span>→</span>
-                      </button>
-                    </div>
-                  </article>
-                ))}
-
-                {filteredQuizzes.length === 0 && (
-                  <div className="empty-state">
-                    <span>🔎</span>
-                    <h3>Тесты не найдены</h3>
-                    <p>
-                      Попробуй другое название или код теста.
-                    </p>
-                  </div>
-                )}
-              </div>
             </section>
 
+            <StatistaCard />
+
+            {/* Search results */}
+            {search.trim() && (
+              <section className="section search-results-section">
+                <div className="section-heading">
+                  <div>
+                    <span className="eyebrow">РЕЗУЛЬТАТЫ ПОИСКА</span>
+                    <h2>Найденные тесты</h2>
+                  </div>
+
+                  <span className="section-count">
+                    {filteredQuizzes.length} тестов
+                  </span>
+                </div>
+
+                <div className="quiz-grid">
+                  {filteredQuizzes.map((quiz) => (
+                    <article className="quiz-card" key={quiz.id}>
+                      <div className="quiz-card-top">
+                        <div className={`quiz-icon ${quiz.color}`}>
+                          {quiz.icon}
+                        </div>
+
+                        <div className="quiz-badges">
+                          <span
+                            className={`visibility ${
+                              quiz.isPublic ? "public" : "private"
+                            }`}
+                          >
+                            {quiz.isPublic ? "PUBLIC" : "PRIVATE"}
+                          </span>
+
+                          {quiz.hasPassword && (
+                            <span
+                              className="password-badge"
+                              title="Для прохождения нужен пароль"
+                            >
+                              <span>🔒</span>
+                              Password
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <span className="quiz-category">
+                        {quiz.category}
+                      </span>
+
+                      <h3>{quiz.title}</h3>
+                      <p>{quiz.description}</p>
+
+                      <div className="quiz-meta">
+                        <span>☷ {quiz.questions} вопросов</span>
+                        <span>◉ {quiz.plays.toLocaleString("ru-RU")} прохождений</span>
+                      </div>
+
+                      <div className="quiz-card-footer">
+                        <span className="quiz-code">
+                          Код: {quiz.code}
+                        </span>
+
+                        <button
+                          className="start-button"
+                          onClick={() => {
+                            if (quiz.hasPassword) {
+                              alert("Для прохождения этого теста нужен пароль.");
+                            } else {
+                              alert(`Открытие теста: ${quiz.title}`);
+                            }
+                          }}
+                        >
+                          Пройти <span>→</span>
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+
+                  {filteredQuizzes.length === 0 && (
+                    <div className="empty-state">
+                      <span>🔎</span>
+                      <h3>Тесты не найдены</h3>
+                      <p>
+                        Попробуй другое название или код теста.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
+
+            {/* Recent results */}
             <section className="results-section">
               <div className="section-heading">
                 <div>
@@ -320,6 +329,7 @@ function App() {
 
             <span className="eyebrow">ТВОЙ ПРОГРЕСС</span>
             <h1>История результатов</h1>
+
             <p className="page-description">
               Здесь собраны результаты твоих пройденных тестов.
             </p>
@@ -329,6 +339,7 @@ function App() {
                 <span>Всего пройдено</span>
                 <strong>24 теста</strong>
               </div>
+
               <div>
                 <span>Последние попытки</span>
                 <strong>{results.length}</strong>
@@ -354,16 +365,17 @@ function App() {
 
             <span className="eyebrow">ТВОЙ КОНСТРУКТОР</span>
             <h1>Создать тест</h1>
+
             <p className="page-description">
-              Здесь будет находиться конструктор собственных тестов.
+              Создавай собственные тесты, добавляй вопросы
+              и делись ими с другими пользователями.
             </p>
 
             <div className="coming-soon">
               <span>✨</span>
               <h2>Скоро появится</h2>
               <p>
-                Ты сможешь создавать тесты, добавлять вопросы
-                и делиться ими с другими пользователями.
+                Здесь будет находиться конструктор тестов.
               </p>
             </div>
           </section>
