@@ -1,0 +1,8 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 22px 12px;
+  border-top: 1px solid var(--border);
+  color: #77768b;
+  font-size: 10px;
+}

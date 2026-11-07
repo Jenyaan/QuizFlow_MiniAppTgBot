@@ -1,0 +1,92 @@
+/* History and create pages */
+
+.history-page,
+.create-page {
+  min-height: 55vh;
+}
+
+.back-button {
+  display: block;
+  margin-bottom: 35px;
+  padding: 10px 15px;
+  color: #b9a9ff;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  font-size: 12px;
+  transition: .2s;
+}
+
+.back-button:hover {
+  border-color: var(--purple);
+  background: var(--surface-hover);
+}
+
+.history-page h1,
+.create-page h1 {
+  margin: 12px 0;
+  font-size: clamp(28px, 4vw, 38px);
+  letter-spacing: -1px;
+}
+
+.page-description {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.history-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.history-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+}
+
+.history-summary span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.history-summary strong {
+  font-size: 22px;
+}
+
+.history-results {
+  margin-top: 20px;
+}
+
+.coming-soon {
+  margin-top: 35px;
+  padding: 45px 25px;
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.coming-soon > span {
+  font-size: 38px;
+}
+
+.coming-soon h2 {
+  margin: 15px 0 10px;
+}
+
+.coming-soon p {
+  max-width: 420px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}

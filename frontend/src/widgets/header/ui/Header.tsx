@@ -2,8 +2,8 @@ import "./Header.css";
 
 type HeaderProps = {
   firstName?: string;
-  username: string;
-  userId: number;
+  username?: string;
+  userId?: number;
   avatarUrl?: string;
 };
 
