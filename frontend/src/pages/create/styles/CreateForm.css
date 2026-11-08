@@ -1,0 +1,219 @@
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.form-section {
+  padding: 26px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.form-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.form-section-heading h2 {
+  margin: 0 0 5px;
+  color: var(--text);
+  font-size: 19px;
+}
+
+.form-section-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group > label,
+.answers-heading > label {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.create-form input[type="text"],
+.create-form input[type="number"],
+.create-form input[type="password"],
+.create-form textarea {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.create-form input::placeholder,
+.create-form textarea::placeholder {
+  color: #66667d;
+}
+
+.create-form input:focus,
+.create-form textarea:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(139, 117, 245, 0.12);
+}
+
+.create-form textarea {
+  resize: vertical;
+  min-height: 85px;
+}
+
+.checkbox-option,
+.radio-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.checkbox-option input,
+.radio-option input {
+  width: 17px;
+  height: 17px;
+  margin: 2px 0 0;
+  accent-color: var(--purple);
+  flex-shrink: 0;
+}
+
+.radio-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.radio-option span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  text-align: center;
+}
+
+.radio-option strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.radio-option small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.inline-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 350px;
+}
+
+.inline-input input {
+  max-width: 110px;
+}
+
+.inline-input span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.field-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.create-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.cancel-button,
+.submit-quiz-button {
+  padding: 13px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cancel-button {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.cancel-button:hover {
+  border-color: var(--purple);
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.submit-quiz-button {
+  border: 1px solid var(--purple);
+  background: var(--purple);
+  color: #fff;
+}
+
+.submit-quiz-button:hover {
+  background: #7861df;
+  border-color: #7861df;
+}
+
+@media (max-width: 600px) {
+  .form-section {
+    padding: 18px;
+  }
+
+  .form-section-heading {
+    gap: 10px;
+  }
+
+  .form-section-heading h2 {
+    font-size: 17px;
+  }
+
+  .form-section-heading p {
+    font-size: 11px;
+  }
+
+  .create-form-footer {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-button,
+  .submit-quiz-button {
+    width: 100%;
+  }
+}

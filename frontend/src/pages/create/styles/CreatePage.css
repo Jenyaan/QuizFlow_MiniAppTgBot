@@ -1,0 +1,10 @@
+.create-page {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+.create-page h1 {
+  margin: 12px 0;
+}

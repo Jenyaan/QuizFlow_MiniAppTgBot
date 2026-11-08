@@ -1,0 +1,33 @@
+.settings-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  padding-right: 85px !important;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  border: none;
+  background: transparent;
+  color: #a997ff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.password-toggle:hover {
+  color: #c4b7ff;
+}
